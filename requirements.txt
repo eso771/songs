@@ -1,0 +1,7 @@
+kurigram==2.1.37
+youtube_search
+requests
+yt-dlp==2025.10.22
+eyed3
+motor
+aiohttp
