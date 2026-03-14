@@ -4,7 +4,7 @@ import time
 import heroku3
 from pyrogram import filters
 
-from cinfig import Config
+from cinfig import Cinfig
 from Song.core.mongo import mongodb
 
 from .logging import LOGGER
