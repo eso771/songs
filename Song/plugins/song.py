@@ -2,7 +2,7 @@ import os
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
 from canfig import BANNED_USERS
-from Song.plugins.Youtube import YouTubeAPI
+from Song.plugins.YouTube import YouTubeAPI
 from Song import app
 from Song.utils.decorators.language import language, languageCB
 import yt_dlp
