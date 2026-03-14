@@ -1,6 +1,5 @@
 from strings import get_string
-
-from Song import app
+from Song import app 
 from Song.misc import SUDOERS
 from Song.utils.database import get_lang, is_maintenance
 
