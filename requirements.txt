@@ -6,3 +6,4 @@ eyed3
 motor
 aiohttp
 pyrogram
+yt-search
