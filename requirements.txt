@@ -9,3 +9,4 @@ pyrogram
 py-yt-search
 python-dotenv
 pyyaml
+heroku3
