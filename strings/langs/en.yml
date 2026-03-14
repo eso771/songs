@@ -1,0 +1,16 @@
+name: 🇦🇿 Azərbaycanca
+
+play_1: "🔍 <b>Sakit qalın, Axtarış edirəm..</b>"
+play_2: "🎵 <b>Təsdiq edildi, Musiqi yüklənir.....</b>"
+play_3: "⚠️ <b>Proses zamanı xəta baş verdi, Sahibimlə əlaqə saxla: @AxtarmaTagYoxdu</b>"
+song_1 : "Musiqi və ya Videonu YouTube-dan yalnız şəxsi söhbətdə yükləyə bilərsiniz. Zəhmət olmasa mənə şəxsi söhbətdə başlayın."
+song_2 : "<b>İstifadə:</b>\n\n/song [Musiqi Adı] və ya [Youtube Linki]"
+song_3 : "Canlı Link Aşkarlandı. Canlı youtube videolarını endirə bilmirəm."
+song_4 : "<b>🎵 Başlıq:</b> {0}\n\n<b>Endirmək istədiyiniz növü seçin.</b>"
+song_5 : "Etibarlı Youtube linki deyil."
+song_6 : "Formatlar əldə edilir...\n\nZəhmət olmasa, gözləyin..."
+song_7 : "Video üçün mövcud formatları əldə etmək alınmadı. Zəhmət olmasa, hər hansı digər treki sınayın."
+song_8 : "📤 <b>Yükləyirəm, Zəhmət olmasa gözləyin</b>"
+song_9 : "Youtube-DL-dən mahnı yükləmək alınmadı\n\n<b>Səbəb:</b> {0}"
+song_10 : "Teleqrama serverlərdən yüklənmə prosesi alınmadı,\n🧑🏼‍🔧 Dəstək: @StudionSC"
+song_11 : "📥 <b>Göndərirəm, Bir qədər gözlə..</b>"
