@@ -7,3 +7,4 @@ motor
 aiohttp
 pyrogram
 py-yt-search
+python-dotenv
