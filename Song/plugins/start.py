@@ -13,15 +13,15 @@ async def start(client, message):
     user = message.from_user.mention
 
     text = f"""
-Salam {user} 👋🏻
-Mən musiqi yükləmək üçün yaradılmış botam 🤖
-Mənim əmrlərim əmrlər buttonuna klikləyin 📚
+**Salam** {user} 👋🏻
+**Mən musiqi yükləmək üçün yaradılmış botam** 🤖
+**Mənim əmrlərim əmrlər buttonuna klikləyin** 📚
 """
 
     buttons = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("➕ Məni qrupa əlavə et", url="https://t.me/YourBotUsername?startgroup=true")
+                InlineKeyboardButton("➕ Məni qrupa əlavə et", url="https://t.me/UzeyirMusic_Bot?startgroup=s&admin=delete_messages+manage_video_chats+pin_messages+invite_users")
             ],
             [
                 InlineKeyboardButton("👨🏻‍💻 Sahibim", url=f"https://t.me/{OWNER}"),
@@ -43,13 +43,13 @@ async def commands(client, query: CallbackQuery):
     text = """
 **Music Yükləmək**🇦🇿 üçün komandalar:
 
-🔮 Komanda: /song
-📜 Nümunə: `/song Üzeyir Qara gözlər`
-📚 Açıqlama: Yazdığınız musiqini yükləyər
+🔮 **Komanda:** /song
+📜 **Nümunə:** `/song Üzeyir Qara gözlər`
+📚 **Açıqlama:** Yazdığınız musiqini yükləyər
 
-🔮 Komanda: /search
-📜 Nümunə: `/search Üzeyir Qara gözlər`
-📚 Açıqlama: Yazdığınız musiqi haqqında sizə məlumat verər
+🔮 **Komanda:** /search
+📜 **Nümunə:** `/search Üzeyir Qara gözlər`
+📚 **Açıqlama:** Yazdığınız musiqi haqqında sizə məlumat verər
 
 📢 **Əlavə olaraq, TikTok, Instagram linkləri göndərərək video yükləyə bilərsiniz..**
 """
@@ -72,15 +72,15 @@ async def back(client, query: CallbackQuery):
     user = query.from_user.mention
 
     text = f"""
-Salam {user} 👋🏻
-Mən musiqi yükləmək üçün yaradılmış botam 🤖
-Mənim əmrlərim əmrlər buttonuna klikləyin 📚
+**Salam** {user} 👋🏻
+**Mən musiqi yükləmək üçün yaradılmış botam** 🤖
+**Mənim əmrlərim əmrlər buttonuna klikləyin** 📚
 """
 
     buttons = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("➕ Məni qrupa əlavə et", url="https://t.me/YourBotUsername?startgroup=true")
+                InlineKeyboardButton("➕ Məni qrupa əlavə et", url="https://t.me/UzeyirMusic_Bot?startgroup=s&admin=delete_messages+manage_video_chats+pin_messages+invite_users")
             ],
             [
                 InlineKeyboardButton("👨🏻‍💻 Sahibim", url=f"https://t.me/{OWNER}"),
