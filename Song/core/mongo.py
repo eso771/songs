@@ -1,12 +1,12 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from Song.cinfig import Cinfig
+from cinfig import Cinfig
 
 from Song.logger import LOGGER
 
 LOGGER.info("Connecting to your Mongo Database...")
 try:
-    _mongo_async_ = AsyncIOMotorClient(Config.MONGODB_URI)
+    _mongo_async_ = AsyncIOMotorClient(Cinfig.MONGODB_URI)
     mongodb = _mongo_async_.Inflex   # <-- burda "Inflex" əslində sənin DB adındır
     LOGGER.info("Connected to your Mongo Database.")
 except Exception as e:
