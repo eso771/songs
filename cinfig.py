@@ -11,7 +11,7 @@ MONGO_URL = "mongodb+srv://agautevdragitevsvh:pJSptT6jE0pcw9a4@cluster0.de4uc.mo
     
 BANNED_USERS = filters.user()
 
-class Config:
+class Cinfig:
 
     OWNER_ID = int(os.getenv("OWNER_ID", "7426096650"))
     OWNER_NAME = os.getenv("OWNER_NAME", "AxtarmaTagYoxdu")
