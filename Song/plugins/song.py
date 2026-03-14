@@ -3,7 +3,7 @@ from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
 from canfig import BANNED_USERS
 from InflexMusic import YouTube, app
-from InflexMusic.utils.decorators.language import language, languageCB
+from Song.utils.decorators.language import language, languageCB
 import yt_dlp
 
 # 🔹 User cache
