@@ -57,7 +57,7 @@ async def commands(client, query: CallbackQuery):
     buttons = InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton("⬅️ Geri", callback_data="back")
+                InlineKeyboardButton("⬅️ Geri", callback_data="geri")
             ]
         ]
     )
@@ -66,7 +66,7 @@ async def commands(client, query: CallbackQuery):
 
 
 # GERİ BUTTON
-@app.on_callback_query(filters.regex("back"))
+@app.on_callback_query(filters.regex("geri"))
 async def back(client, query: CallbackQuery):
 
     user = query.from_user.mention
