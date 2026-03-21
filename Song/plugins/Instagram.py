@@ -1,98 +1,31 @@
-import os
-import re
-import asyncio
+import requests
 from pyrogram import filters
-from pyrogram.types import Message
+
 from Song import app
 
-# ================= SETTINGS =================
-DOWNLOAD_DIR = "downloads"
-os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-INSTAGRAM_REGEX = r"(https?://(www\.)?instagram\.com/[^\s]+)"
-
-# ================= PROGRESS BAR =================
-def progress_bar(percent: float, total: int = 10):
-    filled = int(percent / 100 * total)
-    empty = total - filled
-    return "█" * filled + "░" * empty
-
-# ================= HANDLER =================
-@app.on_message(
-    filters.regex(INSTAGRAM_REGEX)
-    & (filters.private | filters.group)
-)
-async def instagram_handler(client, message: Message):
-    link = message.text
-
-    status_msg = await message.reply_text(
-        "🙋🏻‍♀️ **Zəhmət olmasa gözləyin**\n"
-        "💁🏻‍♀️ **Yüklənmə növü:** Instagram\n\n"
-        "📥 **Yüklənir:** `0%`\n"
-        "`░░░░░░░░░░`"
+@app.on_message(filters.command(["ig", "instagram", "reel"]))
+async def download_instagram_video(client, message):
+    if len(message.command) < 2:
+        await message.reply_text(
+            "Lütfen komuttan sonra bir Instagram reel bağlantısı giriniz."
+        )
+        return
+    a = await message.reply_text("İşleniyor...")
+    url = message.text.split()[1]
+    api_url = (
+        f"https://nodejs-1xn1lcfy3-jobians.vercel.app/v2/downloader/instagram?url={url}"
     )
 
-    file_path = os.path.join(DOWNLOAD_DIR, f"{message.id}.mp4")
+    response = requests.get(api_url)
+    data = response.json()
 
-    cmd = [
-        "yt-dlp",
-        "-f", "mp4",
-        "--newline",
-        "-o", file_path,
-        link
-    ]
+    if data["status"]:
+        video_url = data["data"][0]["url"]
+        await a.delete()
+        await client.send_video(message.chat.id, video_url)
+    else:
+        await a.edit("Reel indirilemedi ❌")
 
-    try:
-        process = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.STDOUT
-        )
 
-        last_percent = -1
 
-        while True:
-            line = await process.stdout.readline()
-            if not line:
-                break
-
-            line = line.decode("utf-8", errors="ignore")
-
-            if "[download]" in line and "%" in line:
-                try:
-                    percent = float(line.split("%")[0].split()[-1])
-                    rounded = int(percent)
-
-                    if rounded != last_percent:
-                        last_percent = rounded
-                        bar = progress_bar(percent)
-
-                        await status_msg.edit(
-                            "🙋🏻‍♀️ **Zəhmət olmasa gözləyin**\n"
-                            "💁🏻‍♀️ **Yüklənmə növü:** Instagram\n\n"
-                            f"📥 **Yüklənir:** `{percent:.1f}%`\n"
-                            f"`{bar}`"
-                        )
-                except:
-                    pass
-
-        await process.wait()
-
-        if not os.path.exists(file_path):
-            await status_msg.edit("❌ **Video yüklənə bilmədi**")
-            return
-
-        await client.send_video(
-            chat_id=message.chat.id,
-            video=file_path,
-            caption=(
-                "🙋🏻‍♀️ **Video hazırdır**\n"
-                "💁🏻‍♀️ **Platforma növ:** Instagram"
-            )
-        )
-
-        await status_msg.delete()
-        os.remove(file_path)
-
-    except Exception as e:
-        await status_msg.edit(f"❌ Xəta baş verdi:\n`{e}`")
