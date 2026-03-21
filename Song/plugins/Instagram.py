@@ -4,13 +4,13 @@ from pyrogram import filters
 from Song import app
 
 
-@app.on_message(filters.text & ~filters.command)
+@app.on_message(filters.text)
 async def download_instagram_video(client, message):
     text = message.text
 
     # Yalnız Instagram linki yoxla
     if "instagram.com" not in text:
-        return  # başqa linkdirsə heç nə etmə
+        return
 
     a = await message.reply_text("İşleniyor...")
 
