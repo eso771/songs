@@ -44,7 +44,7 @@ async def insta_downloader(client, message):
         "no_warnings": True,
 
         # 🔥 ƏN VACİB HİSSƏ
-        "cookiefile": "Song/plugins/cookies.txt",
+        "cookiefile": "cookies.txt",
 
         # 🔥 BAN yeməmək üçün
         "http_headers": {
