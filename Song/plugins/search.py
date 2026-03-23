@@ -63,6 +63,9 @@ async def search_music(client, message):
             InlineKeyboardButton("⬅️ Geri", callback_data="back"),
             InlineKeyboardButton("➡️ İrəli", callback_data="next")
         ]
+        [
+            InlineKeyboardButton("❌ Bağla", callback_data="song_close")
+        ]
     ])
 
     await msg.delete()
@@ -114,10 +117,10 @@ async def change_result(client, query):
     text = f"""
 <b>Axtarış nəticəsi:</b> {index+1}/30
 
-🎵 Başlıq: <a href="{url}">{title}</a>
-📢 Kanal: {channel}
-👁️ Baxış: {views}
-🫯 Platform: YouTube
+🎵 **Başlıq:** <a href="{url}">{title}</a>
+📢 **Kanal:** {channel}
+👁️ **Baxış:** {views}
+🫯 **Platform:** `YouTube`
 """
 
     buttons = InlineKeyboardMarkup([
@@ -138,3 +141,12 @@ async def change_result(client, query):
     )
 
     await query.answer()
+
+
+@app.on_callback_query(filters.regex("song_close") & ~BANNED_USERS)
+async def close_song(client, CallbackQuery):
+    try:
+        await CallbackQuery.message.delete()
+    except:
+        pass
+    await CallbackQuery.answer("Menyu Bağlandı ❌")
