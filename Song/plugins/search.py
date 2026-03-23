@@ -1,5 +1,6 @@
 import yt_dlp
 from pyrogram import Client, filters
+from canfig import BANNED_USERS
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputMediaPhoto
 from Song import app
 
