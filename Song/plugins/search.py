@@ -52,10 +52,10 @@ async def search_music(client, message):
     text = f"""
 <b>Axtarış nəticəsi:</b> 1/30
 
-🎵 Başlıq: <a href="{url}">{title}</a>
-📢 Kanal: {channel}
-👁️ Baxış: {views}
-🫯 Platform: YouTube
+🎵 **Başlıq:** <a href="{url}">{title}</a>
+📢 **Kanal:** {channel}
+👁️ **Baxış:** {views}
+🫯 **Platform:** `YouTube`
 """
 
     buttons = InlineKeyboardMarkup([
@@ -127,6 +127,9 @@ async def change_result(client, query):
         [
             InlineKeyboardButton("⬅️ Geri", callback_data="back"),
             InlineKeyboardButton("➡️ İrəli", callback_data="next")
+        ]
+        [
+            InlineKeyboardButton("❌ Bağla", callback_data="song_close")
         ]
     ])
 
