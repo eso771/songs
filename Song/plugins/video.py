@@ -36,7 +36,7 @@ async def song_search(client, message: Message):
 
     # 🔥 Link → birbaşa video
     if "youtu" in query:
-        msg = await message.reply_text("🎬 Video yüklənir...")
+        msg = await message.reply_text("🎬 **Video yüklənir...**")
 
         try:
             file_path, status = await YouTube.download(query, msg, video=True)
@@ -171,7 +171,7 @@ async def download_video(client, cb):
     vidid = cb.data.split()[1]
     url = f"https://www.youtube.com/watch?v={vidid}"
 
-    await cb.message.edit_caption("🎬 Video yüklənir...")
+    await cb.message.edit_caption("🎬 **Video yüklənir...**")
 
     try:
         file_path, status = await YouTube.download(url, cb.message, video=True)
