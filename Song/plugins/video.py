@@ -1,7 +1,6 @@
 import os
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto, Message
-from canfig import BANNED_USERS
 from Song.plugins.YouTube import YouTubeAPI
 from Song import app
 import yt_dlp
@@ -28,23 +27,19 @@ async def search_youtube(query: str, limit: int = 30):
         return results
 
 # 🔹 /song command
-@app.on_message(filters.command("video") & filters.private & ~BANNED_USERS)
+@app.on_message(filters.command("video") & filters.private)
 async def song_search(client, message: Message):
     if len(message.command) < 2:
         return await message.reply_text("❌ Video adı və ya YouTube linki yaz.")
 
     query = message.text.split(None, 1)[1].strip()
 
-    # 🔥 YouTube link → birbaşa video
+    # 🔥 Link → birbaşa video
     if "youtu" in query:
         msg = await message.reply_text("🎬 Video yüklənir...")
 
         try:
-            file_path, status = await YouTube.download(
-                query,
-                msg,
-                video=True
-            )
+            file_path, status = await YouTube.download(query, msg, video=True)
         except Exception as e:
             return await msg.edit_text(f"❌ Xəta: {e}")
 
@@ -55,7 +50,7 @@ async def song_search(client, message: Message):
 
         caption = (
             f"🎬 <b>Başlıq:</b> <a href='{query}'>{title}</a>\n"
-            f"⏰ <b>Müddət:</b> {duration_min:02}"
+            f"⏰ <b>Müddət:</b> {duration_min:02}:{duration_sec:02}"
         )
 
         await client.send_video(
@@ -95,8 +90,11 @@ async def send_result(message_obj, user_id):
     result = results[index]
 
     minutes = result["duration"] // 60
+    seconds = result["duration"] % 60
     views = result["views"]
     total = len(results)
+
+    yt_url = f"https://www.youtube.com/watch?v={result['id']}"
 
     buttons = InlineKeyboardMarkup([
         [
@@ -111,30 +109,33 @@ async def send_result(message_obj, user_id):
 
     caption = (
         f"🔍 {index+1}/{total}\n\n"
-        f"🎬 <b>{result['title']}</b>\n"
-        f"⏱️ {minutes:02} dəq\n"
-        f"👁️ {views:,} baxış"
+        f"🎬 <b>Başlıq:</b> <a href='{yt_url}'>{result['title']}</a>\n"
+        f"⏱️ <b>Müddət:</b> {minutes:02}:{seconds:02}\n"
+        f"👁️ <b>Baxış:</b> {views:,}"
     )
 
     try:
-        if result.get("thumbnail"):
+        thumb = result.get("thumbnail")
+
+        if thumb:
             if isinstance(message_obj, Message):
                 await message_obj.delete()
                 await message_obj.chat.send_photo(
-                    photo=result["thumbnail"],
+                    photo=thumb,
                     caption=caption,
                     reply_markup=buttons
                 )
             else:
                 await message_obj.edit_media(
                     InputMediaPhoto(
-                        media=result["thumbnail"],
+                        media=thumb,
                         caption=caption
                     ),
                     reply_markup=buttons
                 )
         else:
             await message_obj.edit_text(caption, reply_markup=buttons)
+
     except:
         await message_obj.edit_text(caption, reply_markup=buttons)
 
@@ -173,11 +174,7 @@ async def download_video(client, cb):
     await cb.message.edit_caption("🎬 Video yüklənir...")
 
     try:
-        file_path, status = await YouTube.download(
-            url,
-            cb.message,
-            video=True
-        )
+        file_path, status = await YouTube.download(url, cb.message, video=True)
     except Exception as e:
         return await cb.message.edit_caption(f"❌ Xəta: {e}")
 
@@ -187,8 +184,8 @@ async def download_video(client, cb):
     title, duration_min, duration_sec, thumbnail, vidid = await YouTube.details(url)
 
     caption = (
-        f"🎬 <b>{title}</b>\n"
-        f"⏰ {duration_min:02}"
+        f"🎬 <b>Başlıq:</b> <a href='{url}'>{title}</a>\n"
+        f"⏰ <b>Müddət:</b> {duration_min:02}:{duration_sec:02}"
     )
 
     await client.send_video(
