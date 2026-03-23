@@ -8,7 +8,8 @@ from Song import app
 DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-INSTAGRAM_REGEX = r"(https?://(www\.)?instagram\.com/[^\s]+)"
+# Instagram Reels və Post linkləri üçün regex
+INSTAGRAM_REGEX = r"(https?://(www\.)?instagram\.com/(reel|p)/[^\s]+)"
 
 # ================= PROGRESS BAR =================
 def progress_bar(percent: float, total: int = 10):
@@ -58,13 +59,10 @@ async def instagram_handler(client, message: Message):
 
             line = line.decode("utf-8", errors="ignore").lower()
 
-            # ===== PRIVATE / FORBIDDEN CHECK =====
+            # ===== PRIVATE CHECK (yalnız həqiqi private sözləri) =====
             if any(x in line for x in [
-                "private",
-                "forbidden",
-                "403",
-                "login required",
-                "this video is private"
+                "this video is private",
+                "private account"
             ]):
                 private_video = True
                 break
@@ -93,8 +91,8 @@ async def instagram_handler(client, message: Message):
         # ===== PRIVATE VIDEO MESSAGE =====
         if private_video:
             await status_msg.edit(
-                "🙋🏻‍♀️ <b>Göndərdiyiniz video linki Instagram private hesabında olduğundan yükləyə bilmirəm</b>\n"
-                "💁🏻‍♀️ <b>Əgər bunun xəta olduğunu irad edirsinizsə, bizimlə əlaqə saxlayın</b>"
+                "🙋🏻‍♀️ <b>Göndərdiyiniz video linki Instagram private hesabındadır, yükləyə bilmirəm</b>\n"
+                "💁🏻‍♀️ <b>Əgər bunun xəta olduğunu düşünürsünüzsə, bizimlə əlaqə saxlayın</b>"
             )
             if os.path.exists(file_path):
                 os.remove(file_path)
@@ -103,8 +101,8 @@ async def instagram_handler(client, message: Message):
         # ===== FILE CHECK =====
         if not os.path.exists(file_path):
             await status_msg.edit(
-                "🙋🏻‍♀️ <b>Video yüklənmədi</b>\n"
-                "💁🏻‍♀️ <b>Əgər bunun xəta olduğunu irad edirsinizsə, bizimlə [əlaqə](https://t.me/Uzeyirrrrrrrrrr) saxlayın</b>"
+                "❌ <b>Video yüklənmədi</b>\n"
+                "💁🏻‍♀️ <b>Link açıq olsa da, yükləmə uğursuz oldu. Xahiş edirik linki yenidən yoxlayın və ya başqa link göndərin.</b>"
             )
             return
 
