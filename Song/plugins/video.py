@@ -98,9 +98,9 @@ async def send_result(message_obj, user_id):
 
     buttons = InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("⬅️", callback_data="prev"),
+            InlineKeyboardButton("⬅️", callback_data="prevs"),
             InlineKeyboardButton("🎬 Yüklə", callback_data=f"download {result['id']}"),
-            InlineKeyboardButton("➡️", callback_data="next"),
+            InlineKeyboardButton("➡️", callback_data="nexts"),
         ],
         [
             InlineKeyboardButton("❌ Bağla", callback_data="close")
@@ -140,7 +140,7 @@ async def send_result(message_obj, user_id):
         await message_obj.edit_text(caption, reply_markup=buttons)
 
 # 🔹 Next
-@app.on_callback_query(filters.regex("next"))
+@app.on_callback_query(filters.regex("nexts"))
 async def next_(client, cb):
     data = search_cache.get(cb.from_user.id)
     if not data:
@@ -153,7 +153,7 @@ async def next_(client, cb):
     await cb.answer()
 
 # 🔹 Prev
-@app.on_callback_query(filters.regex("prev"))
+@app.on_callback_query(filters.regex("prevs"))
 async def prev_(client, cb):
     data = search_cache.get(cb.from_user.id)
     if not data:
