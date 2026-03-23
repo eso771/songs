@@ -5,7 +5,7 @@ API_ID = int(os.environ.get("API_ID", "18482353"))
 
 API_HASH = os.environ.get("API_HASH", "9f7840b7015b359a49e142ce42decd71")
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN", "8086093711:AAGWwjLZvOx4wDTu1N4Zv5E5uoR6h9rtKeM")
+BOT_TOKEN = os.environ.get("BOT_TOKEN", "8465309717:AAERLZfaxGPegJB6ADl44J0rtDzyszMFR-4")
 
 PLAYLIST_ID = int(os.environ.get("PLAYLIST_ID", "-1003767974813"))
 
