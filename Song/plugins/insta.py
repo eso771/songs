@@ -35,11 +35,12 @@ async def instagram_handler(client, message: Message):
     file_path = os.path.join(DOWNLOAD_DIR, f"instagram_{message.id}.mp4")
 
     cmd = [
-        "yt-dlp",
-        "-f", "mp4",
-        "--newline",
-        "-o", file_path,
-        link
+    "yt-dlp",
+    "-f", "mp4",
+    "--newline",
+    "--cookies", "cookies.txt",   # cookie faylı əlavə olundu
+    "-o", file_path,
+    link
     ]
 
     try:
