@@ -7,6 +7,7 @@ import yt_dlp
 
 YouTube = YouTubeAPI()
 
+# 🔹 Cache
 search_cache = {}
 
 # 🔎 YouTube search
@@ -25,50 +26,17 @@ async def search_youtube(query: str, limit: int = 30):
             })
         return results
 
-# 🔥 Instagram download
-def download_instagram(url):
-    ydl_opts = {
-        "outtmpl": "downloads/%(id)s.%(ext)s",
-        "quiet": True
-    }
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=True)
-        file_path = ydl.prepare_filename(info)
-        return file_path, info
-
-# 🔹 Command
+# 🔹 /song command
 @app.on_message(filters.command("video") & filters.private)
-async def video_handler(client, message: Message):
+async def song_search(client, message: Message):
     if len(message.command) < 2:
-        return await message.reply_text("❌ Link və ya video adı yaz.")
+        return await message.reply_text("❌ Video adı və ya YouTube linki yaz.")
 
     query = message.text.split(None, 1)[1].strip()
 
-    # 🔥 Instagram
-    if "instagram.com" in query:
-        msg = await message.reply_text("📥 Instagram video yüklənir...")
-
-        try:
-            file_path, info = download_instagram(query)
-        except Exception as e:
-            return await msg.edit_text(f"❌ Xəta: {e}")
-
-        caption = f"📸 <b>{info.get('title','Instagram Video')}</b>"
-
-        await client.send_video(
-            chat_id=message.chat.id,
-            video=file_path,
-            caption=caption
-        )
-
-        if os.path.exists(file_path):
-            os.remove(file_path)
-
-        return await msg.delete()
-
-    # 🔥 YouTube link
+    # 🔥 Link → birbaşa video
     if "youtu" in query:
-        msg = await message.reply_text("🎬 Video yüklənir...")
+        msg = await message.reply_text("🎬 **Video yüklənir...**")
 
         try:
             file_path, status = await YouTube.download(query, msg, video=True)
@@ -78,11 +46,11 @@ async def video_handler(client, message: Message):
         if not status or not file_path:
             return await msg.edit_text("❌ Yükləmə alınmadı")
 
-        title, duration_min, duration_sec, _, _ = await YouTube.details(query)
+        title, duration_min, duration_sec, thumbnail, vidid = await YouTube.details(query)
 
         caption = (
             f"🎬 <b>Başlıq:</b> <a href='{query}'>{title}</a>\n"
-            f"⏰ {duration_min:02}:{duration_sec:02}"
+            f"⏰ <b>Müddət:</b> {duration_min:02}:{duration_sec:02}"
         )
 
         await client.send_video(
@@ -97,7 +65,7 @@ async def video_handler(client, message: Message):
 
         return await msg.delete()
 
-    # 🔎 YouTube search
+    # 🔎 Axtarış
     msg = await message.reply_text("🔎 Axtarılır...")
 
     try:
@@ -106,12 +74,12 @@ async def video_handler(client, message: Message):
         return await msg.edit_text(f"❌ Xəta: {e}")
 
     if not results:
-        return await msg.edit_text("❌ Tapılmadı")
+        return await msg.edit_text("❌ Nəticə tapılmadı")
 
     search_cache[message.from_user.id] = {"results": results, "index": 0}
     await send_result(msg, message.from_user.id)
 
-# 🔹 Result
+# 🔹 Result göstər
 async def send_result(message_obj, user_id):
     data = search_cache.get(user_id)
     if not data:
@@ -120,6 +88,11 @@ async def send_result(message_obj, user_id):
     index = data["index"]
     results = data["results"]
     result = results[index]
+
+    minutes = result["duration"] // 60
+    seconds = result["duration"] % 60
+    views = result["views"]
+    total = len(results)
 
     yt_url = f"https://www.youtube.com/watch?v={result['id']}"
 
@@ -135,16 +108,34 @@ async def send_result(message_obj, user_id):
     ])
 
     caption = (
-        f"🎬 <a href='{yt_url}'>{result['title']}</a>"
+        f"🔍 {index+1}/{total}\n\n"
+        f"🎬 <b>Başlıq:</b> <a href='{yt_url}'>{result['title']}</a>\n"
+        f"⏱️ <b>Müddət:</b> {minutes:02}:{seconds:02}\n"
+        f"👁️ <b>Baxış:</b> {views:,}"
     )
 
     try:
-        await message_obj.delete()
-        await message_obj.chat.send_photo(
-            photo=result["thumbnail"],
-            caption=caption,
-            reply_markup=buttons
-        )
+        thumb = result.get("thumbnail")
+
+        if thumb:
+            if isinstance(message_obj, Message):
+                await message_obj.delete()
+                await message_obj.chat.send_photo(
+                    photo=thumb,
+                    caption=caption,
+                    reply_markup=buttons
+                )
+            else:
+                await message_obj.edit_media(
+                    InputMediaPhoto(
+                        media=thumb,
+                        caption=caption
+                    ),
+                    reply_markup=buttons
+                )
+        else:
+            await message_obj.edit_text(caption, reply_markup=buttons)
+
     except:
         await message_obj.edit_text(caption, reply_markup=buttons)
 
@@ -152,8 +143,12 @@ async def send_result(message_obj, user_id):
 @app.on_callback_query(filters.regex("nexts"))
 async def next_(client, cb):
     data = search_cache.get(cb.from_user.id)
-    if data and data["index"] < len(data["results"]) - 1:
+    if not data:
+        return
+
+    if data["index"] < len(data["results"]) - 1:
         data["index"] += 1
+
     await send_result(cb.message, cb.from_user.id)
     await cb.answer()
 
@@ -161,37 +156,53 @@ async def next_(client, cb):
 @app.on_callback_query(filters.regex("prevs"))
 async def prev_(client, cb):
     data = search_cache.get(cb.from_user.id)
-    if data and data["index"] > 0:
+    if not data:
+        return
+
+    if data["index"] > 0:
         data["index"] -= 1
+
     await send_result(cb.message, cb.from_user.id)
     await cb.answer()
 
-# 🔹 Download
+# 🔹 Download video
 @app.on_callback_query(filters.regex("download"))
 async def download_video(client, cb):
     vidid = cb.data.split()[1]
     url = f"https://www.youtube.com/watch?v={vidid}"
 
-    await cb.message.edit_caption("🎬 Video yüklənir...")
+    await cb.message.edit_caption("🎬 **Video yüklənir...**")
 
-    file_path, status = await YouTube.download(url, cb.message, video=True)
+    try:
+        file_path, status = await YouTube.download(url, cb.message, video=True)
+    except Exception as e:
+        return await cb.message.edit_caption(f"❌ Xəta: {e}")
 
-    title, duration_min, duration_sec, _, _ = await YouTube.details(url)
+    if not status or not file_path:
+        return await cb.message.edit_caption("❌ Yükləmə alınmadı")
+
+    title, duration_min, duration_sec, thumbnail, vidid = await YouTube.details(url)
+
+    caption = (
+        f"🎬 <b>Başlıq:</b> <a href='{url}'>{title}</a>\n"
+        f"⏰ <b>Müddət:</b> {duration_min:02}:{duration_sec:02}"
+    )
 
     await client.send_video(
         chat_id=cb.message.chat.id,
         video=file_path,
-        caption=f"🎬 {title}"
+        caption=caption,
+        duration=int(duration_sec)
     )
 
     if os.path.exists(file_path):
         os.remove(file_path)
 
     await cb.message.delete()
-    await cb.answer("Yükləndi")
+    await cb.answer("Yükləndi 🎬")
 
 # 🔹 Close
 @app.on_callback_query(filters.regex("close"))
 async def close_(client, cb):
     await cb.message.delete()
-    await cb.answer("Bağlandı")
+    await cb.answer("Bağlandı ❌")
