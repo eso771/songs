@@ -50,7 +50,7 @@ async def song_search(client, message: Message):
 
         caption = (
             f"🎬 <b>Başlıq:</b> <a href='{query}'>{title}</a>\n"
-            f"⏰ <b>Müddət:</b> {duration_min:02}:{duration_sec:02}"
+            f"⏰ <b>Müddət:</b> {duration_min:02}"
         )
 
         await client.send_video(
@@ -66,7 +66,7 @@ async def song_search(client, message: Message):
         return await msg.delete()
 
     # 🔎 Axtarış
-    msg = await message.reply_text("🔎 Axtarılır...")
+    msg = await message.reply_text("🔎 **Axtarılır...**")
 
     try:
         results = await search_youtube(query)
@@ -110,7 +110,7 @@ async def send_result(message_obj, user_id):
     caption = (
         f"🔍 {index+1}/{total}\n\n"
         f"🎬 <b>Başlıq:</b> <a href='{yt_url}'>{result['title']}</a>\n"
-        f"⏱️ <b>Müddət:</b> {minutes:02}:{seconds:02}\n"
+        f"⏱️ <b>Müddət:</b> {minutes:02}\n"
         f"👁️ <b>Baxış:</b> {views:,}"
     )
 
@@ -185,7 +185,7 @@ async def download_video(client, cb):
 
     caption = (
         f"🎬 <b>Başlıq:</b> <a href='{url}'>{title}</a>\n"
-        f"⏰ <b>Müddət:</b> {duration_min:02}:{duration_sec:02}"
+        f"⏰ <b>Müddət:</b> {duration_min:02}"
     )
 
     await client.send_video(
