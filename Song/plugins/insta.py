@@ -34,13 +34,14 @@ async def instagram_handler(client, message: Message):
 
     file_path = os.path.join(DOWNLOAD_DIR, f"instagram_{message.id}.mp4")
 
+    # Burada cookies.txt əvəzinə birbaşa brauzerdən cookie götürülür
     cmd = [
-    "yt-dlp",
-    "-f", "mp4",
-    "--newline",
-    "--cookies", "cookies.txt",   # cookie faylı əlavə olundu
-    "-o", file_path,
-    link
+        "yt-dlp",
+        "-f", "b[ext=mp4]",
+        "--newline",
+        "--cookies-from-browser", "chrome",   # Chrome brauzerindən cookie götürür
+        "-o", file_path,
+        link
     ]
 
     try:
@@ -60,7 +61,7 @@ async def instagram_handler(client, message: Message):
 
             line = line.decode("utf-8", errors="ignore").lower()
 
-            # ===== PRIVATE CHECK (yalnız həqiqi private sözləri) =====
+            # ===== PRIVATE CHECK =====
             if any(x in line for x in [
                 "this video is private",
                 "private account"
