@@ -47,6 +47,10 @@ async def commands(client, query: CallbackQuery):
 📜 **Nümunə:** `/song Üzeyir Qara gözlər`
 📚 **Açıqlama:** Yazdığınız musiqini yükləyər
 
+🔮 **Komanda:** /video
+📜 **Nümunə:** `/video Üzeyir Qara gözlər`
+📚 **Açıqlama:** Yazdığınız videonu yükləyər
+
 🔮 **Komanda:** /search
 📜 **Nümunə:** `/search Üzeyir Qara gözlər`
 📚 **Açıqlama:** Yazdığınız musiqi haqqında sizə məlumat verər
