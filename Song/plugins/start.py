@@ -15,7 +15,7 @@ async def start(client, message):
     text = f"""
 **Salam** {user} 👋🏻
 **Mən musiqi yükləmək üçün yaradılmış botam** 🤖
-**Mənim əmrlərim əmrlər buttonuna klikləyin** 📚
+**Mənim əmrlərim üçün əmrlər buttonuna klikləyin** 📚
 """
 
     buttons = InlineKeyboardMarkup(
@@ -74,7 +74,7 @@ async def back(client, query: CallbackQuery):
     text = f"""
 **Salam** {user} 👋🏻
 **Mən musiqi yükləmək üçün yaradılmış botam** 🤖
-**Mənim əmrlərim əmrlər buttonuna klikləyin** 📚
+**Mənim əmrlərim üçün əmrlər buttonuna klikləyin** 📚
 """
 
     buttons = InlineKeyboardMarkup(
